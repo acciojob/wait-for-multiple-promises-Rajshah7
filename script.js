@@ -2,54 +2,55 @@ const output = document.getElementById('output');
 
 output.innerHTML = `
 	<tr id="loading">
-		<td colspan="2">Loading</td>
+		<td colspan="2">Loading...</td>
 	</tr>
 `;
 
 const start = performance.now();
 
-function createPromise(name){
+function createPromise(name) {
 	const delay = Math.random() * 2 + 1;
 
-	const promise = new Promise((resolve) =>{
+	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve({
 				name,
-			time: delay 
-			})
-		},delay * 1000)
-	})
+				time: delay
+			});
+		}, delay * 1000);
+	});
 }
 
 const promise1 = createPromise("Promise 1");
 const promise2 = createPromise("Promise 2");
 const promise3 = createPromise("Promise 3");
 
-Promise.all([promise1,promise2,promise3]).then((results) => {
-	
-	output.innerHTML = "";
+Promise.all([promise1, promise2, promise3])
+	.then((results) => {
 
-	results.forEach((result) => {
-		const row = document.createElement("tr");
+		output.innerHTML = "";
 
-		row.innerHTML = `
-			<td>${result.name}</td>
-			<td>${result.time.toFixed(3)}</td>
-		`
+		results.forEach((result) => {
 
-		output.append(row);
-	})
+			const row = document.createElement("tr");
 
-	const totalTime =
-      (performance.now() - startTime) / 1000;
+			row.innerHTML = `
+				<td>${result.name}</td>
+				<td>${result.time.toFixed(3)}</td>
+			`;
 
-    // Add total row
-    const totalRow = document.createElement("tr");
+			output.appendChild(row);
+		});
 
-    totalRow.innerHTML = `
-      <td>Total</td>
-      <td>${totalTime.toFixed(3)}</td>
-    `;
+		const totalTime =
+			(performance.now() - start) / 1000;
 
-    output.appendChild(totalRow);
-})
+		const totalRow = document.createElement("tr");
+
+		totalRow.innerHTML = `
+			<td>Total</td>
+			<td>${totalTime.toFixed(3)}</td>
+		`;
+
+		output.appendChild(totalRow);
+	});
